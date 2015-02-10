@@ -10,6 +10,7 @@ LED_DMA		= 5	  # DMA channel
 LED_BRIGHTNESS	= 15	  # Can go up to 255, but it's good to keep power usage low
 LED_INVERT	= False	  # I believe this is for ws2811's
 
+# This was lifted from the rpi_ws281x strandtest demo. I only added the intensity code:
 def wheel(pos, intensity=100):
   """Generate rainbow colors across 0-255 positions."""
   if pos < 85:
@@ -31,10 +32,12 @@ def chaseDot(strip):
   max_range = 23
   chase_speed = 0.1
   for x in range(0,max_range):
+    # This controls the leading pixel:
     if x < max_range-4:
       pix = (x % 6) + 1
       strip.setPixelColor( pix, wheel(x*(256/max_range), 100) ) 
       strip.setPixelColor( pix+7, wheel(x*(256/max_range), 100) )
+    # This controls the "tail" pixels:
     for tail in range(1,5):
       if (x-tail)+4 >= max_range:
         continue
@@ -49,7 +52,7 @@ def chaseDot(strip):
 def fadeFromWhite(strip):
   fade_speed = 0.001
   for x in range(0,256):
-    for y in range(0,14):
+    for y in range(0,LED_COUNT):
       strip.setPixelColor(y, Color(255-x,255-x,255-x))
     strip.show()
     time.sleep(fade_speed)
