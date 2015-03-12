@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import time
 from neopixel import *
 
@@ -57,7 +59,17 @@ def fadeFromWhite(strip):
     strip.show()
     time.sleep(fade_speed)
     
-    
+def setMultiColor():
+  fade_speed = 0.001
+  step = 256/6
+  for intensity in range(0,101,10):
+    for x in range(0,7):
+      color = wheel( step*x, intensity ) 
+      strip.setPixelColor( x, color )
+      strip.setPixelColor( x+7, color ) 
+      strip.show()
+      time.sleep(fade_speed)
+
 if __name__ == '__main__':
   try:
     strip = Adafruit_NeoPixel(LED_COUNT, LED_PIN, LED_FREQ_HZ, LED_DMA, LED_INVERT, LED_BRIGHTNESS)
@@ -65,8 +77,5 @@ if __name__ == '__main__':
     chaseDot(strip)
     fadeFromWhite(strip)
   finally:
-    # ensure we don't leave LED's on if user ctl-c's:
-    for i in range(strip.numPixels()):
-                strip.setPixelColor(i, Color(0,0,0))
-                strip.show()
+    setMultiColor()
     strip = None
